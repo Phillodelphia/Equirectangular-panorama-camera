@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<title>Åva Virtual Tour</title>
+</head>
+
+<style>
+canvas {
+height: 100vh;
+width: 100%;
+display: block;
+}
+</style>
+
+<body>
+<div id="container"></div>
+
+<div class='chatBox' style='width:500px;height:100px;overflow-y:scroll;'>
+
+</div>
+<form class='chatIn'> 
+<input type='text' id='chat-input' placeholder='Enter message'><button>Send</button>
+</form>
+</div>
+
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script> <!-- links for the three.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script> <!--can't be found when running on apache-->
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script type="module" src="camera360.js"> </script>
+
+<script> //jquery code 
+
+
+$(function () { 
+
+var socket = io.connect('http://10.32.47.71:82');
+/*
+$('.arrowF').click(function(e){
+
+)};
+$('.arrowB').click(function(e){
+
+)};
+*/
+    
+	$('.chatIn').submit(function(e){
+      e.preventDefault(); // prevents page reloading
+      socket.emit('sendmsg', $('#chat-input').val());
+      $('#chat-input').val(''); 
+      return false;
+});
+	socket.on('chat-message', function(msg) { //sends the message to the site
+	$('.chatBox').append($('<li>').text(msg));
+	});
+});
+
+</script>
+</html>
+
